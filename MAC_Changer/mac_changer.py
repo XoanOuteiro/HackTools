@@ -2,6 +2,20 @@
 
 import subprocess
 
-subprocess.call("ifconfig eth0 down", shell=True) #eth0 for ether, wlan0 for wi-fi
-subprocess.call("ifconfig eth0 hw ether 00:11:22:33:44:66", shell=True)
-subprocess.call("ifconfig eth0 up", shell=True)
+interface : str = str(input("Insert the interface to change: \n>> "))
+newMac : str = str(input("Insert the new MAC address: \n>> "))
+
+print(f"[+] Changing MAC address for interface: {interface} to {newMac}")
+
+'''
+
+#!-- Insecure version, can be hijacked with ; injections
+
+subprocess.call(f"ifconfig {interface} down", shell=True) #eth0 for ether, wlan0 for wi-fi
+subprocess.call(f"ifconfig {interface} hw ether {newMac}", shell=True)
+subprocess.call(f"ifconfig {interface} up", shell=True)
+
+'''
+subprocess.call(["ifconfig",interface,"down"])
+subprocess.call(["ifconfig",interface,"hw","ether",newMac])
+subprocess.call(["ifconfig",interface,"up"])
