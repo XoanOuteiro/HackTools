@@ -1,21 +1,30 @@
 #!/usr/bin/env python
 
 import subprocess
+import optparse
 
-interface : str = str(input("Insert the interface to change: \n>> "))
-newMac : str = str(input("Insert the new MAC address: \n>> "))
+parser = optparse.OptionParser()
 
+'''
+
+    ---Definition of parser options
+
+'''
+parser.add_option("-i", "--interface", dest="interface", help="Interface to change its MAC address")
+parser.add_option("-m", "--mac", dest="newMac", help="New MAC address")
+
+(options, arguments) = parser.parse_args()
+
+interface : str = options.interface
+newMac : str = options.newMac
+
+'''
+
+    ---Program logic
+
+'''
 print(f"[+] Changing MAC address for interface: {interface} to {newMac}")
 
-'''
-
-#!-- Insecure version, can be hijacked with ; injections
-
-subprocess.call(f"ifconfig {interface} down", shell=True) #eth0 for ether, wlan0 for wi-fi
-subprocess.call(f"ifconfig {interface} hw ether {newMac}", shell=True)
-subprocess.call(f"ifconfig {interface} up", shell=True)
-
-'''
-subprocess.call(["ifconfig",interface,"down"])
-subprocess.call(["ifconfig",interface,"hw","ether",newMac])
-subprocess.call(["ifconfig",interface,"up"])
+subprocess.call(["ifconfig", interface, "down"])  # list calling instead of concatenations to avoid ; hijacking
+subprocess.call(["ifconfig", interface, "hw", "ether", newMac])
+subprocess.call(["ifconfig", interface, "up"])
